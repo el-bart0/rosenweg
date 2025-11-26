@@ -138,10 +138,17 @@ add_action( 'widgets_init', 'rosenweg_widgets_init' );
  * Enqueue scripts and styles.
  */
 function rosenweg_scripts() {
-	wp_enqueue_style( 'rosenweg-style', get_stylesheet_uri(), array(), _S_VERSION );
+	wp_enqueue_style('glide-style', get_stylesheet_directory_uri() . '/vendor/glide/css/glide.core.min.css', array(), '3.5.2', false );
+	wp_enqueue_style( 'rosenweg-style', get_template_directory_uri() . '/style.min.css', array(), _S_VERSION );
 	wp_style_add_data( 'rosenweg-style', 'rtl', 'replace' );
 
+	wp_enqueue_script('jquery');
 	wp_enqueue_script( 'rosenweg-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
+	wp_enqueue_script( 'glide-js', get_stylesheet_directory_uri() . '/vendor/glide/js/glide.min.js', array(), '3.5.2', true );
+	wp_enqueue_script( 'photoswipe-js', get_stylesheet_directory_uri() . '/vendor/photoswipe/js/photoswipe.min.js', array(), '3.5.2', true );
+	wp_enqueue_script( 'photoswipe-ui-js', get_stylesheet_directory_uri() . '/vendor/photoswipe/js/photoswipe-ui-default.min.js', array(), '3.5.2', true );
+
+	wp_enqueue_script( 'rosenweg-js', get_template_directory_uri() . '/js/app.min.js', array(), _S_VERSION, true );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
@@ -176,3 +183,12 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 	require get_template_directory() . '/inc/jetpack.php';
 }
 
+
+add_filter( 'ai1wm_exclude_themes_from_export', function ( $exclude_filters ) {
+    $theme_dir = get_option( 'stylesheet' );
+
+    $exclude_filters[] = $theme_dir . '/node_modules';
+    $exclude_filters[] = $theme_dir . '/.git';
+
+    return $exclude_filters;
+});
